@@ -1,0 +1,87 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: "Open Sans", sans-serif;
+    font-size: 1.4em;
+    color: #333;
+    background-image: linear-gradient(135deg, #79f1a4 10%, #0e5cad 100%);
+}
+
+a,
+input,
+button {
+    font: inherit;
+    color: inherit;
+}
+
+h4 {
+    margin-bottom: 3.2rem;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    color: rgba(51, 51, 51, 0.8);
+}
+
+.field:not(:first-child) {
+    margin-top: 1.6rem;
+}
+
+.field:not(:last-child) {
+    margin-bottom: 1.6rem;
+}
+
+.field label {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding-left: 1.6rem;
+    margin-bottom: 0.5em;
+}
+
+.field input {
+    display: block;
+    width: 30rem;
+    padding: 0 1em;
+    border: none;
+    border-radius: 2rem;
+    line-height: 3.5rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    outline: none;
+}
+
+.field.actions {
+    text-align: center;
+}
+
+.field button {
+    padding: 0 2em;
+    border: none;
+    border-radius: 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 3.5rem;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    background-image: linear-gradient(135deg, #f05f57 10%, #360940 100%);
+    cursor: pointer;
+}
+
+.field button:hover,
+.field button:focus {
+    background-image: linear-gradient(135deg, #f05f57 5%, #360940 90%);
+}
