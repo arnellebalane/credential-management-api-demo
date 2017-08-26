@@ -11,21 +11,34 @@
     </head>
 
     <body>
-        <h4>Sign In</h4>
+        <section id="signin">
+            <h4>Sign In</h4>
 
-        <form action="#" method="post">
-            <div class="field">
-                <label><span>Fake</span> Username</label>
-                <input type="text" name="username">
+            <form action="#" method="post">
+                <div class="field">
+                    <label><span>Fake</span> Username</label>
+                    <input type="text" name="username">
+                </div>
+                <div class="field">
+                    <label><span>Fake</span> Password</label>
+                    <input type="password" name="password">
+                </div>
+                <div class="field actions">
+                    <button>Sign In</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="profile" class="hidden">
+            <div class="profile">
+                <img src="avatar.png">
+                <div class="details">
+                    <h3>Arnelle Balane</h3>
+                    <p>arnellebalane</p>
+                </div>
+                <a href="#">Sign Out</a>
             </div>
-            <div class="field">
-                <label><span>Fake</span> Password</label>
-                <input type="password" name="password">
-            </div>
-            <div class="field actions">
-                <button>Sign In</button>
-            </div>
-        </form>
+        </section>
 
         <script src="index.js"></script>
     </body>
