@@ -82,8 +82,13 @@ h4 {
 
 .field.social-auth {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-top: 6.4rem;
+}
+
+.field.social-auth > * {
+    margin: 2px 0;
 }
 
 .field button {

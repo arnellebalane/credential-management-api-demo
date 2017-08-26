@@ -16,7 +16,8 @@ if (navigator.credentials && navigator.credentials.preventSilentAccess) {
             password: true,
             federated: {
                 providers: [
-                    'https://accounts.google.com'
+                    'https://accounts.google.com',
+                    'https://facebook.com'
                 ]
             }
         });
@@ -26,6 +27,9 @@ if (navigator.credentials && navigator.credentials.preventSilentAccess) {
             } else if (credentials.type === 'federated'
             && credentials.provider === 'https://accounts.google.com') {
                 signInWithGoogle(credentials);
+            } else if (credentials.type === 'federated'
+            && credentials.provider === 'https://facebook.com') {
+                signInWithFacebook(credentials);
             }
         }
 
@@ -69,6 +73,18 @@ function handleGoogleSignIn(user) {
     signIn(credentials);
 }
 
+function handleFacebookSignIn() {
+    FB.api('/me?fields=name,email,picture', (profile) => {
+        const credentials = new FederatedCredential({
+            id: profile.email,
+            name: profile.name,
+            iconURL: profile.picture.data.url,
+            provider: 'https://facebook.com'
+        });
+        signIn(credentials);
+    });
+}
+
 async function signIn(credentials) {
     $('.profile img').src = credentials.iconURL || 'avatar.png';
     $('.profile h3').textContent = credentials.name || '';
@@ -95,10 +111,22 @@ async function signInWithGoogle(credentials) {
     handleGoogleSignIn(user);
 }
 
+async function signInWithFacebook(credentials) {
+    FB.getLoginStatus((response) => {
+        if (response.status === 'connected') {
+            return handleFacebookSignIn();
+        }
+        FB.login(handleFacebookSignIn);
+    });
+}
+
 async function signOut() {
     switch (user.provider) {
         case 'https://accounts.google.com':
             await signOutWithGoogle();
+            break;
+        case 'https://facebook.com':
+            await signOutWithFacebook();
             break;
     }
 
@@ -111,6 +139,10 @@ async function signOut() {
 async function signOutWithGoogle() {
     const auth = gapi.auth2.getAuthInstance();
     await auth.signOut();
+}
+
+function signOutWithFacebook() {
+    FB.logout();
 }
 
 function $(selector, context = document) {
