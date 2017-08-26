@@ -40,7 +40,6 @@ h4 {
     margin: 0 0 3.2rem 0;
     font-size: 1.6rem;
     text-transform: uppercase;
-    letter-spacing: 0.5em;
     color: rgba(51, 51, 51, 0.8);
 }
 
@@ -84,6 +83,7 @@ h4 {
 .field.social-auth {
     display: flex;
     justify-content: center;
+    margin-top: 6.4rem;
 }
 
 .field button {
