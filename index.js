@@ -1,18 +1,21 @@
 const user = localStorage.getItem('user');
 if (user) {
     signIn(JSON.parse(user));
+} else {
+    screen('signin');
 }
 
 
 
 if (navigator.credentials && navigator.credentials.preventSilentAccess) {
     (async () => {
+        if (user) return;
 
-        if (!user) {
-            const credentials = await navigator.credentials.get({ password: true });
-            if (credentials) {
-                console.log(credentials);
-            }
+        const credentials = await navigator.credentials.get({
+            password: true
+        });
+        if (credentials) {
+            signIn(credentials);
         }
 
     })();
@@ -49,11 +52,17 @@ async function signIn(credentials) {
     const user = only(credentials, ['id', 'name', 'password', 'iconURL']);
     localStorage.setItem('user', JSON.stringify(user));
     screen('profile');
+
+    if (credentials instanceof Credential) {
+        await navigator.credentials.store(credentials);
+    }
 }
 
-function signOut() {
+async function signOut() {
     localStorage.removeItem('user');
     screen('signin');
+
+    await navigator.credentials.preventSilentAccess();
 }
 
 function $(selector, context = document) {
