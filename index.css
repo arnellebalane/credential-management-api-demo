@@ -61,6 +61,11 @@ h4 {
     margin-bottom: 0.5em;
 }
 
+.field label span {
+    font-weight: 400;
+    opacity: 0.75;
+}
+
 .field input {
     display: block;
     width: 30rem;
