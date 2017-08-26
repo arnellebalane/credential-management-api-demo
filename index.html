@@ -4,6 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="597932733653-1tl5t3mq3kqh4n1tvifsnuldbimq7pvh.apps.googleusercontent.com">
+
         <title>Credential Management API Demo</title>
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
@@ -30,12 +33,15 @@
                 <div class="field actions">
                     <button>Sign In</button>
                 </div>
+                <div class="field social-auth">
+                    <div class="g-signin2" data-onsuccess="handleGoogleSignIn"></div>
+                </div>
             </form>
         </section>
 
         <section id="profile" class="hidden">
             <div class="profile">
-                <img src="avatar.png">
+                <img src="">
                 <div class="details">
                     <h3>Arnelle Balane</h3>
                     <p>arnellebalane</p>
@@ -44,6 +50,7 @@
             </div>
         </section>
 
+        <script src="https://apis.google.com/js/platform.js"></script>
         <script src="index.js"></script>
     </body>
 </html>

@@ -81,6 +81,11 @@ h4 {
     text-align: center;
 }
 
+.field.social-auth {
+    display: flex;
+    justify-content: center;
+}
+
 .field button {
     padding: 0 2em;
     border: none;

@@ -1,6 +1,7 @@
-const user = localStorage.getItem('user');
+let user = localStorage.getItem('user');
 if (user) {
-    signIn(JSON.parse(user));
+    user = JSON.parse(user);
+    signIn(user);
 } else {
     screen('signin');
 }
@@ -12,10 +13,20 @@ if (navigator.credentials && navigator.credentials.preventSilentAccess) {
         if (user) return;
 
         const credentials = await navigator.credentials.get({
-            password: true
+            password: true,
+            federated: {
+                providers: [
+                    'https://accounts.google.com'
+                ]
+            }
         });
         if (credentials) {
-            signIn(credentials);
+            if (credentials.type === 'password') {
+                signIn(credentials);
+            } else if (credentials.type === 'federated'
+            && credentials.provider === 'https://accounts.google.com') {
+                signInWithGoogle(credentials);
+            }
         }
 
     })();
@@ -47,12 +58,23 @@ $('.profile a').addEventListener('click', (e) => {
     signOut();
 });
 
+function handleGoogleSignIn(user) {
+    const profile = user.getBasicProfile();
+    const credentials = new FederatedCredential({
+        id: profile.getEmail(),
+        name: profile.getName(),
+        iconURL: profile.getImageUrl(),
+        provider: 'https://accounts.google.com'
+    });
+    signIn(credentials);
+}
+
 async function signIn(credentials) {
     $('.profile img').src = credentials.iconURL || 'avatar.png';
     $('.profile h3').textContent = credentials.name || '';
     $('.profile p').textContent = credentials.id || '';
 
-    const user = only(credentials, ['id', 'name', 'password', 'iconURL']);
+    user = only(credentials, ['id', 'name', 'password', 'iconURL', 'provider']);
     localStorage.setItem('user', JSON.stringify(user));
     screen('profile');
 
@@ -61,11 +83,34 @@ async function signIn(credentials) {
     }
 }
 
+async function signInWithGoogle(credentials) {
+    const auth = gapi.auth2.getAuthInstance();
+    if (auth.isSignedIn.get()) {
+        const user = auth.currentUser.get();
+        if (user.getBasicProfile().getEmail() === credentials.id) {
+            return handleGoogleSignIn(user);
+        }
+    }
+    const user = await auth.signIn({ login_hint: credentials.id });
+    handleGoogleSignIn(user);
+}
+
 async function signOut() {
+    switch (user.provider) {
+        case 'https://accounts.google.com':
+            await signOutWithGoogle();
+            break;
+    }
+
     localStorage.removeItem('user');
     screen('signin');
 
     await navigator.credentials.preventSilentAccess();
+}
+
+async function signOutWithGoogle() {
+    const auth = gapi.auth2.getAuthInstance();
+    await auth.signOut();
 }
 
 function $(selector, context = document) {
