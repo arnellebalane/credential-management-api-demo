@@ -99,25 +99,38 @@ async function signIn(credentials) {
     }
 }
 
-async function signInWithGoogle(credentials) {
-    const auth = gapi.auth2.getAuthInstance();
-    if (auth.isSignedIn.get()) {
-        const user = auth.currentUser.get();
-        if (user.getBasicProfile().getEmail() === credentials.id) {
-            return handleGoogleSignIn(user);
+function signInWithGoogle(credentials) {
+    gapi.load('client:auth2', async () => {
+        const auth = gapi.auth2.getAuthInstance();
+        if (auth.isSignedIn.get()) {
+            const user = auth.currentUser.get();
+            if (user.getBasicProfile().getEmail() === credentials.id) {
+                return handleGoogleSignIn(user);
+            }
         }
-    }
-    const user = await auth.signIn({ login_hint: credentials.id });
-    handleGoogleSignIn(user);
+        const user = await auth.signIn({ login_hint: credentials.id });
+        handleGoogleSignIn(user);
+    });
 }
 
 async function signInWithFacebook(credentials) {
-    FB.getLoginStatus((response) => {
-        if (response.status === 'connected') {
-            return handleFacebookSignIn();
-        }
-        FB.login(handleFacebookSignIn);
-    });
+    const onFacebookSdkLoad = () => {
+        FB.getLoginStatus((response) => {
+            if (response.status === 'connected') {
+                return handleFacebookSignIn();
+            }
+            FB.login(handleFacebookSignIn);
+        });
+    };
+    if (window.fbAsyncInit.hasRun) {
+        onFacebookSdkLoad();
+    } else {
+        const originalFbAsyncInit = window.fbAsyncInit;
+        window.fbAsyncInit = () => {
+            originalFbAsyncInit();
+            onFacebookSdkLoad();
+        };
+    }
 }
 
 async function signOut() {
